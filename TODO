@@ -1,0 +1,11 @@
+Test!
+
+NO Import-Package: org.apache.commons.lang,org.apache.commons.lang.builder,org.apache.commons.lang.exception
+
+Logging? not (remove) slf4j-simple, but OSGi logger or Import-Package slfj4j API package, remove dependency?
+
+Export-Package what?
+
+LICENSE headers & maven enforcement
+
+GitHub public & BLOG
