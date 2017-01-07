@@ -1,4 +1,14 @@
-Logging? not (remove) slf4j-simple, but OSGi logger or Import-Package slfj4j API package, remove dependency?
+remove -buildpath, and probably also copyToLib
+
+http://enroute.osgi.org/tutorial_wrap/270-private-references.html
+    Warning: Export org.gradle.util,  has 3,  private references [org.gradle.internal.impldep.com.google.common.collect, org.gradle.internal.impldep.com.google.common.base, org.gradle.internal],
+    Warning: Export org.gradle.api.internal.classpath,  has 2,  private references [org.gradle.internal.classpath, org.gradle.internal.installation],
+    Warning: Export org.gradle.api.resources,  has 1,  private references [org.gradle.internal.exceptions],
+    Warning: Export org.gradle.tooling.internal.consumer,  has 6,  private references [org.gradle.internal.event, org.gradle.internal.classpath, org.gradle.internal.logging.progress, org.gradle.internal, org.gradle.internal.concurrent, org.gradle.initialization],
+    Warning: Export org.gradle.tooling.internal.consumer.async,  has 1,  private references [org.gradle.internal.concurrent],
+    Warning: Export org.gradle.tooling.internal.consumer.connection,  has 1,  private references [org.gradle.internal.concurrent],
+    Warning: Export org.gradle.tooling.internal.consumer.loader,  has 2,  private references [org.gradle.internal.logging.progress, org.gradle.initialization],
+    Warning: Export org.gradle.tooling.internal.consumer.parameters,  has 2,  private references [org.gradle.internal.classpath, org.gradle.initialization],
 
 ch.vorburger.osgi.gradle impl, incl. test
 

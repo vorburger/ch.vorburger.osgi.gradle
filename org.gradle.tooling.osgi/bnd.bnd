@@ -2,14 +2,16 @@
 
 Bundle-SymbolicName: org.gradle.tooling
 
-Export-Package: org.gradle.util.*, \
+Export-Package: \
+    org.gradle.util.*, \
     org.gradle.api.*, \
     org.gradle.tooling.*, \
     !org.gradle.tooling.internal.*;\
     -noimport:=true
 
-Private-Package: *
+Private-Package: !org.slf4j.*,*
 
 Import-Package: \
+    org.slf4j.*, \
     org.apache.commons.*;resolution:=optional
     // Do NOT add * here, as usual; it wreaks havoc
