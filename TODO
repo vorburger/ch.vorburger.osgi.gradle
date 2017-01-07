@@ -1,11 +1,10 @@
-Test!
-
-NO Import-Package: org.apache.commons.lang,org.apache.commons.lang.builder,org.apache.commons.lang.exception
-
 Logging? not (remove) slf4j-simple, but OSGi logger or Import-Package slfj4j API package, remove dependency?
 
-Export-Package what?
+Export-Package what?  org.gradle.tooling
+Export-Package: *;-split-package:=merge-last;-noimport:=true
+
+Bundle-Version: 0.0.0.${tstamp}
 
 LICENSE headers & maven enforcement
 
-GitHub public & BLOG
+GitHub public & BLOG (incl. link to https://github.com/stempler/bnd-platform as alternative)

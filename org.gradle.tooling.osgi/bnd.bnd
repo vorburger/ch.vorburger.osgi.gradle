@@ -2,3 +2,7 @@
 
 Bundle-SymbolicName: org.gradle.tooling
 Export-Package: *
+
+Import-Package: \
+    org.apache.commons.*;resolution:=optional
+    // Do NOT add * here, as usual; it wreaks havoc, here
