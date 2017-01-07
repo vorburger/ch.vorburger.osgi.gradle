@@ -2,4 +2,6 @@ rootProject.name = 'ch.vorburger.osgi.gradle.root'
 
 include 'org.gradle.tooling.osgi',
         'org.gradle.tooling.osgi.test',
-        'ch.vorburger.osgi.gradle'
+        'ch.vorburger.osgi.gradle',
+        'ch.vorburger.osgi.gradle.test',
+        'ch.vorburger.osgi.gradle.test.bundle'

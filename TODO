@@ -1,6 +1,18 @@
 
-ch.vorburger.osgi.gradle impl, incl. test
+use https://github.com/google/guava/wiki/ListenableFutureExplained
+useful to "chain" BuildService in SourceInstallService
+
+BuildServiceImpl must support notification, so that we know when to load the bundle
+
+BuildServiceImpl should support clean shut down with close() of all of its ProjectConnection
 
 LICENSE headers & maven enforcement
 
 GitHub public & BLOG (incl. link to https://github.com/stempler/bnd-platform as alternative)
+
+propose contributing LoggingOutputStream to Gradle
+
+factor out BuildService into new ch.vorburger.gradle JAR; upstream proposal?
+
+propose contributing e.g. as Apache Felix Source Install, or new Pax URL scheme provider (email lists)
+    a bit like https://ops4j1.jira.com/wiki/display/paxurl/Dir+Protocol, but from sources

@@ -9,4 +9,6 @@ repositories {
 
 dependencies {
     compile "org.gradle:gradle-tooling-api:${toolingApiVersion}"
+    // We need to force latest slf4j-api here so that we can use SubstituteLogger in LoggingOutputStreamTest in ch.vorburger.osgi.gradle
+    compile "org.slf4j:slf4j-api:1.7.22"
 }
