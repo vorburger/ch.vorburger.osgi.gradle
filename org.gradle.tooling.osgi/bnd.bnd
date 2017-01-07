@@ -1,8 +1,18 @@
+gradleToolingApiVersion = 3.3
+
 -buildpath: ${lsa;build/dependencies/*}
 
 Bundle-SymbolicName: org.gradle.tooling
 Export-Package: *
 
+Export-Package: org.gradle.util.*;version=${gradleToolingApiVersion}, \
+    org.gradle.api.*;version=${gradleToolingApiVersion}, \
+    org.gradle.tooling.*;version=${gradleToolingApiVersion}, \
+    !org.gradle.tooling.internal.*;\
+    -noimport:=true
+
+Private-Package: *
+
 Import-Package: \
     org.apache.commons.*;resolution:=optional
-    // Do NOT add * here, as usual; it wreaks havoc, here
+    // Do NOT add * here, as usual; it wreaks havoc
