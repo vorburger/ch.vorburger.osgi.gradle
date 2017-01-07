@@ -1,7 +1,5 @@
 Logging? not (remove) slf4j-simple, but OSGi logger or Import-Package slfj4j API package, remove dependency?
 
-Bundle-Version: 0.0.0.${tstamp}
-
 ch.vorburger.osgi.gradle impl, incl. test
 
 LICENSE headers & maven enforcement

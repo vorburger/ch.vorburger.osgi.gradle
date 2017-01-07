@@ -1,6 +1,8 @@
 
 def toolingApiVersion = gradle.gradleVersion
 
+version = "${toolingApiVersion}"
+
 repositories {
     maven { url 'https://repo.gradle.org/gradle/libs-releases' }
 }

@@ -20,7 +20,7 @@ public class EmbeddedGradleToolingAPITest {
     @Configuration
     public Option[] config() {
         return options(
-                bundle("file:../org.gradle.tooling.osgi/build/libs/org.gradle.tooling.osgi-1.0.0-SNAPSHOT.jar"),
+                bundle("file:../org.gradle.tooling.osgi/build/libs/org.gradle.tooling.osgi-3.3.jar"),
                 junitBundles());
     }
 

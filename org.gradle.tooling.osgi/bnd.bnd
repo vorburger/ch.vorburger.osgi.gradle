@@ -1,13 +1,10 @@
-gradleToolingApiVersion = 3.3
-
 -buildpath: ${lsa;build/dependencies/*}
 
 Bundle-SymbolicName: org.gradle.tooling
-Export-Package: *
 
-Export-Package: org.gradle.util.*;version=${gradleToolingApiVersion}, \
-    org.gradle.api.*;version=${gradleToolingApiVersion}, \
-    org.gradle.tooling.*;version=${gradleToolingApiVersion}, \
+Export-Package: org.gradle.util.*, \
+    org.gradle.api.*, \
+    org.gradle.tooling.*, \
     !org.gradle.tooling.internal.*;\
     -noimport:=true
 
