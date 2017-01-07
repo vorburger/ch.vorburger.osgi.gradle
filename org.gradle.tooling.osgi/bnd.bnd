@@ -1,11 +1,22 @@
 Bundle-SymbolicName: org.gradle.tooling
 
 Export-Package: \
-    org.gradle.util.*, \
-    org.gradle.api.*, \
-    org.gradle.tooling.*, \
-    !org.gradle.tooling.internal.*;\
-    -noimport:=true
+    org.gradle.api, \
+    org.gradle.api.artifacts, \
+    org.gradle.api.logging, \
+    org.gradle.api.logging.configuration, \
+    org.gradle.api.specs, \
+    org.gradle.tooling, \
+    org.gradle.tooling.events, \
+    org.gradle.tooling.events.task, \
+    org.gradle.tooling.events.test, \
+    org.gradle.tooling.exceptions, \
+    org.gradle.tooling.model, \
+    org.gradle.tooling.model.build, \
+    org.gradle.tooling.model.eclipse, \
+    org.gradle.tooling.model.gradle, \
+    org.gradle.tooling.model.idea, \
+    org.gradle.tooling.model.java
 
 Private-Package: !org.slf4j.*,*
 
