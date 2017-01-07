@@ -14,4 +14,8 @@ public interface BuildService {
 
     Future<?> buildContinously(File projectDirectory, String task, BuildServiceListener listener);
 
+    default Future<?> buildContinously(File projectDirectory, String task, BuildServiceSingleFileOutputListener listener) {
+        return buildContinously(projectDirectory, task, new BuildServiceListenerAdapter(projectDirectory, listener));
+    }
+
 }

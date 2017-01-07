@@ -1,10 +1,9 @@
+concurrent ExecutorServiceProvider
+
+BuildServiceImpl should support clean shut down with close() of all of its ProjectConnection
 
 use https://github.com/google/guava/wiki/ListenableFutureExplained
 useful to "chain" BuildService in SourceInstallService
-
-BuildServiceImpl must support notification, so that we know when to load the bundle
-
-BuildServiceImpl should support clean shut down with close() of all of its ProjectConnection
 
 LICENSE headers & maven enforcement
 
