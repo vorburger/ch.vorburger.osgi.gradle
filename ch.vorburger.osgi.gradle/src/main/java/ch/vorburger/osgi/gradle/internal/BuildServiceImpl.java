@@ -33,7 +33,7 @@ public class BuildServiceImpl implements BuildService, AutoCloseable {
     }
 
     private Future<?> build(File projectDirectory, String[] tasks, boolean continuous, BuildServiceListener listener) {
-        Logger logger = LoggerFactory.getLogger(projectDirectory.toString());
+        Logger logger = LoggerFactory.getLogger(getClass().getSimpleName() + " (" + projectDirectory.toString() + ")");
         Future<?> future = executorService.submit(() -> {
             ProjectConnection connection = GradleConnector.newConnector()
                     .forProjectDirectory(projectDirectory)
