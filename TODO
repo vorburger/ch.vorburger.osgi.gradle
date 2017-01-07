@@ -1,4 +1,3 @@
-remove -buildpath, and probably also copyToLib
 
 http://enroute.osgi.org/tutorial_wrap/270-private-references.html
     Warning: Export org.gradle.util,  has 3,  private references [org.gradle.internal.impldep.com.google.common.collect, org.gradle.internal.impldep.com.google.common.base, org.gradle.internal],

@@ -10,10 +10,3 @@ repositories {
 dependencies {
     compile "org.gradle:gradle-tooling-api:${toolingApiVersion}"
 }
-
-task copyToLib(type: Copy) {
-    into "$buildDir/dependencies"
-    from configurations.runtime
-}
-
-jar.dependsOn(copyToLib);

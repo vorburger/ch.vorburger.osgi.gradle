@@ -1,5 +1,3 @@
--buildpath: ${lsa;build/dependencies/*}
-
 Bundle-SymbolicName: org.gradle.tooling
 
 Export-Package: \
