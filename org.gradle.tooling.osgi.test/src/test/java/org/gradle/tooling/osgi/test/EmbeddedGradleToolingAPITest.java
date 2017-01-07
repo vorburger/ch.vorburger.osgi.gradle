@@ -2,6 +2,7 @@ package org.gradle.tooling.osgi.test;
 
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
 import static org.ops4j.pax.exam.CoreOptions.options;
+import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 import static org.ops4j.pax.exam.CoreOptions.bundle;
 
 import java.io.File;
@@ -20,6 +21,7 @@ public class EmbeddedGradleToolingAPITest {
     @Configuration
     public Option[] config() {
         return options(
+                systemProperty("pax.exam.osgi.unresolved.fail").value("true"),
                 bundle("file:../org.gradle.tooling.osgi/build/libs/org.gradle.tooling.osgi-3.3.jar"),
                 junitBundles());
     }
