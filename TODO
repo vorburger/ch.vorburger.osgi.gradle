@@ -1,4 +1,3 @@
-concurrent ExecutorServiceProvider
 
 BuildServiceImpl should support clean shut down with close() of all of its ProjectConnection
 

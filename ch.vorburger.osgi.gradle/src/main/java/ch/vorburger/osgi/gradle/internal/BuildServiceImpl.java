@@ -1,10 +1,10 @@
 package ch.vorburger.osgi.gradle.internal;
 
 import ch.vorburger.osgi.gradle.internal.LoggingOutputStream.Level;
+import ch.vorburger.osgi.gradle.internal.concurrent.ExecutorServiceProviderImpl;
 import java.io.File;
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import org.gradle.tooling.BuildLauncher;
 import org.gradle.tooling.GradleConnector;
@@ -26,7 +26,7 @@ public class BuildServiceImpl implements BuildService {
     private final ExecutorService executorService;
 
     public BuildServiceImpl() {
-        this(Executors.unconfigurableExecutorService(Executors.newCachedThreadPool()));
+        this(new ExecutorServiceProviderImpl().getCachedThreadPool());
     }
 
     public BuildServiceImpl(ExecutorService executorService) {
