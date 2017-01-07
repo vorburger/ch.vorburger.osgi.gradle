@@ -1,13 +1,22 @@
 package ch.vorburger.osgi.gradle.internal.concurrent;
 
-import java.util.concurrent.ExecutorService;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 public class ExecutorServiceProviderImpl implements ExecutorServiceProvider {
 
     @Override
-    public ExecutorService newCachedThreadPool() {
-        return Executors.unconfigurableExecutorService(Executors.newCachedThreadPool());
+    public ListeningExecutorService newCachedThreadPool(String poolName) {
+        return MoreExecutors.listeningDecorator(
+                Executors.unconfigurableExecutorService(
+                        Executors.newCachedThreadPool(newNamedThreadFactory(poolName))));
+    }
+
+    private ThreadFactory newNamedThreadFactory(String poolName) {
+        // TODO implement creating pools with Thread name set to poolName-#
+        return Executors.defaultThreadFactory();
     }
 
 }

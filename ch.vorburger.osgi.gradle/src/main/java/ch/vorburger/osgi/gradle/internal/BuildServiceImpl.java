@@ -25,7 +25,7 @@ public class BuildServiceImpl implements BuildService, AutoCloseable {
     private final ExecutorService executorService;
 
     public BuildServiceImpl() {
-        this(ExecutorServiceProviderSingleton.INSTANCE.newCachedThreadPool());
+        this(ExecutorServiceProviderSingleton.INSTANCE.newCachedThreadPool("BuildService"));
     }
 
     public BuildServiceImpl(ExecutorService executorService) {

@@ -13,6 +13,6 @@ public interface ExecutorServiceProvider {
     /**
      * See {@link Executors#newCachedThreadPool()}.
      */
-    ExecutorService newCachedThreadPool();
+    ExecutorService newCachedThreadPool(String poolName);
 
 }
