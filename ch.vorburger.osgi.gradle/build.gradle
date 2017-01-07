@@ -9,5 +9,6 @@ dependencies {
   compile 'org.slf4j:slf4j-api:1.7.22'
   testCompile 'junit:junit:4.12'
   testCompile 'com.google.truth:truth:0.31'
+  testCompile 'org.awaitility:awaitility:2.0.0'
   testRuntime 'org.slf4j:slf4j-simple:1.7.22'
 }

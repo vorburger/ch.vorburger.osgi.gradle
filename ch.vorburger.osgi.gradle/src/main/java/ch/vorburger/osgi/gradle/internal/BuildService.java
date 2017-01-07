@@ -8,7 +8,7 @@ import java.util.concurrent.Future;
  *
  * @author Michael Vorburger
  */
-public interface BuildService {
+public interface BuildService extends AutoCloseable {
 
     Future<?> build(File projectDirectory, String... tasks);
 

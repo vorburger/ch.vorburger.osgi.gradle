@@ -14,6 +14,7 @@ import java.io.File;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.Configuration;
@@ -29,10 +30,16 @@ import org.osgi.framework.ServiceReference;
  * @author Michael Vorburger
  */
 @RunWith(PaxExam.class)
-public class SourceInstallServiceTest {
+public class SourceInstallServiceTest implements AutoCloseable {
 
     @Inject BundleContext bundleContext;
     @Inject SourceInstallService sourceInstallService;
+
+	@After
+    @Override
+    public void close() throws Exception {
+        sourceInstallService.close();
+    }
 
     @Configuration
     public Option[] config() {

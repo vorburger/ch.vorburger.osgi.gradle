@@ -19,8 +19,7 @@ import org.slf4j.LoggerFactory;
  * @author Michael Vorburger
  */
 // TODO @Component
-public class SourceInstallServiceImpl implements SourceInstallService {
-    // TODO implements AutoCloseable @Deactivate void close() { buildService.close(); }
+public class SourceInstallServiceImpl implements SourceInstallService, AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(SourceInstallServiceImpl.class);
 
@@ -34,7 +33,7 @@ public class SourceInstallServiceImpl implements SourceInstallService {
     @Override
     public Future<Bundle> installSourceBundle(File projectDirectory) {
         SettableFuture<Bundle> installFuture = SettableFuture.create();
-        Future<?> buildFuture = buildService.buildContinously(projectDirectory, "build", singleProducedFile -> {
+        /* Future<?> buildFuture = */buildService.buildContinously(projectDirectory, "build", singleProducedFile -> {
             // TODO handle rebuild & update!  NB: Can only set future once..
             try {
                 InputStream inputStream = new FileInputStream(singleProducedFile);
@@ -47,6 +46,12 @@ public class SourceInstallServiceImpl implements SourceInstallService {
             }
         });
         return installFuture;
+    }
+
+    @Override
+    // TODO @Deactivate
+    public void close() throws Exception {
+        buildService.close();
     }
 
 }

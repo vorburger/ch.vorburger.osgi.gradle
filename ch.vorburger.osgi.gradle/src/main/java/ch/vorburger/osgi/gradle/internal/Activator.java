@@ -7,13 +7,17 @@ import org.osgi.framework.BundleContext;
 // TODO remove once @Component on SourceInstallServiceImpl works
 public class Activator implements BundleActivator {
 
+    private SourceInstallService sourceInstallService;
+
     @Override
     public void start(BundleContext context) throws Exception {
-        context.registerService(SourceInstallService.class, new SourceInstallServiceImpl(context), null);
+        sourceInstallService = new SourceInstallServiceImpl(context);
+        context.registerService(SourceInstallService.class, sourceInstallService, null);
     }
 
     @Override
     public void stop(BundleContext context) throws Exception {
+        sourceInstallService.close();
     }
 
 }

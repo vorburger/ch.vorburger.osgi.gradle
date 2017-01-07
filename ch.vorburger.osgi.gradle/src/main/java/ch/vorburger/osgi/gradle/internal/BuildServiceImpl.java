@@ -1,7 +1,7 @@
 package ch.vorburger.osgi.gradle.internal;
 
 import ch.vorburger.osgi.gradle.internal.LoggingOutputStream.Level;
-import ch.vorburger.osgi.gradle.internal.concurrent.ExecutorServiceProviderImpl;
+import ch.vorburger.osgi.gradle.internal.concurrent.ExecutorServiceProviderSingleton;
 import java.io.File;
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
@@ -18,15 +18,14 @@ import org.slf4j.LoggerFactory;
  *
  * @author Michael Vorburger
  */
-public class BuildServiceImpl implements BuildService {
-    // TODO implements AutoCloseable close() ?
+public class BuildServiceImpl implements BuildService, AutoCloseable {
 
-    private static final Logger LOG = LoggerFactory.getLogger(BuildServiceImpl.class);
+    // private static final Logger LOG = LoggerFactory.getLogger(BuildServiceImpl.class);
 
     private final ExecutorService executorService;
 
     public BuildServiceImpl() {
-        this(new ExecutorServiceProviderImpl().getCachedThreadPool());
+        this(ExecutorServiceProviderSingleton.INSTANCE.newCachedThreadPool());
     }
 
     public BuildServiceImpl(ExecutorService executorService) {
@@ -67,8 +66,10 @@ public class BuildServiceImpl implements BuildService {
 */
                 launcher.run();
             } finally {
-                logger.info("ProjectConnection closed");
-                connection.close();
+                if (!executorService.isShutdown()) {
+                    connection.close();
+                    logger.info("ProjectConnection closed");
+                }
             }
         });
         logger.info("Tasks submitted to ExecutorService: {}", Arrays.toString(tasks));
@@ -83,6 +84,11 @@ public class BuildServiceImpl implements BuildService {
     @Override
     public Future<?> buildContinously(File projectDirectory, String task, BuildServiceListener listener) {
         return build(projectDirectory, new String[] { task }, true, listener);
+    }
+
+    @Override
+    public void close() throws Exception {
+        executorService.shutdownNow();
     }
 
 }

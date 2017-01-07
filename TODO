@@ -1,5 +1,5 @@
 
-BuildServiceImpl should support clean shut down with close() of all of its ProjectConnection
+SourceInstallServiceTest TODO reload testing
 
 use https://github.com/google/guava/wiki/ListenableFutureExplained
 useful to "chain" BuildService in SourceInstallService

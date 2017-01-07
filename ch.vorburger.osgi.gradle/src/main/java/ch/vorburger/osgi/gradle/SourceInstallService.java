@@ -9,7 +9,7 @@ import org.osgi.framework.Bundle;
  *
  * @author Michael Vorburger
  */
-public interface SourceInstallService {
+public interface SourceInstallService extends AutoCloseable {
 
     /**
      * Installs an OSGi bundle from a source code project directory.
