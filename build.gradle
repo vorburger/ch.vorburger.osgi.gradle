@@ -1,10 +1,29 @@
+buildscript {
+  repositories {
+    jcenter()
+  }
+  dependencies {
+    classpath 'biz.aQute.bnd:biz.aQute.bnd.gradle:3.3.0'
+  }
+}
+
+plugins {
+  id "com.github.hierynomus.license" version "0.13.1"
+}
+
 allprojects  {
+  group = 'ch.vorburger.osgi.gradle'
+  version = '1.0.0-SNAPSHOT'
+
   apply plugin: 'java'
   apply plugin: 'maven'
   apply plugin: 'eclipse'
+  apply plugin: 'com.github.hierynomus.license'
 
-  group = 'ch.vorburger.osgi.gradle'
-  version = '1.0.0-SNAPSHOT'
+  license {
+    header rootProject.file('LICENSE-HEADER')
+    strictCheck true
+  }
 }
 
 subprojects {
@@ -18,15 +37,5 @@ subprojects {
     mavenLocal()
     jcenter() // maven { url "http://repo.maven.apache.org/maven2" }
     maven { url "http://repo.spongepowered.org/maven" }
-  }
-
-}
-
-buildscript {
-  repositories {
-    jcenter()
-  }
-  dependencies {
-    classpath 'biz.aQute.bnd:biz.aQute.bnd.gradle:3.3.0'
   }
 }

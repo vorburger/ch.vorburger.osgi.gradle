@@ -1,11 +1,9 @@
 
-LICENSE headers & maven enforcement
+Video, BLOG (incl. link to https://github.com/stempler/bnd-platform as alternative)
 
-GitHub public & BLOG (incl. link to https://github.com/stempler/bnd-platform as alternative)
-
-propose contributing LoggingOutputStream to Gradle
+propose contributing LoggingOutputStream to Gradle?
 
 factor out BuildService into new ch.vorburger.gradle JAR; upstream proposal?
 
-propose contributing e.g. as Apache Felix Source Install, or new Pax URL scheme provider (email lists)
+propose contributing e.g. as Apache Felix Source Install, or new Pax URL scheme provider? (email lists)
     a bit like https://ops4j1.jira.com/wiki/display/paxurl/Dir+Protocol, but from sources
