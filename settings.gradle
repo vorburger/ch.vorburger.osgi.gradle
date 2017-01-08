@@ -4,4 +4,5 @@ include 'org.gradle.tooling.osgi',
         'org.gradle.tooling.osgi.test',
         'ch.vorburger.osgi.gradle',
         'ch.vorburger.osgi.gradle.test',
-        'ch.vorburger.osgi.gradle.test.bundle'
+        'ch.vorburger.osgi.gradle.test.bundle.api',
+        'ch.vorburger.osgi.gradle.test.bundle.provider'

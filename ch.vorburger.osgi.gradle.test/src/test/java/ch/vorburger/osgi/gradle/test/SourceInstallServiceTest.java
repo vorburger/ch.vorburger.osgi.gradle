@@ -1,16 +1,24 @@
 package ch.vorburger.osgi.gradle.test;
 
-import static org.junit.Assert.assertEquals;
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.awaitility.Awaitility.await;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.ops4j.pax.exam.CoreOptions.bundle;
-import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
+import static org.ops4j.pax.exam.CoreOptions.maven;
+import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
 import static org.ops4j.pax.exam.CoreOptions.systemProperty;
+import static org.ops4j.pax.exam.CoreOptions.wrappedBundle;
 
 import ch.vorburger.osgi.gradle.SourceInstallService;
-import ch.vorburger.osgi.gradle.test.bundle.TestService;
+import ch.vorburger.osgi.gradle.test.bundle.api.TestService;
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
 import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
@@ -32,10 +40,20 @@ import org.osgi.framework.ServiceReference;
 @RunWith(PaxExam.class)
 public class SourceInstallServiceTest implements AutoCloseable {
 
+    final File testBundleProjectDir = new File("../ch.vorburger.osgi.gradle.test.bundle.provider");
+    final File testBundleSourceFile = new File(testBundleProjectDir, "src/main/java/ch/vorburger/osgi/gradle/test/bundle/provider/TestServiceImpl.java");
+
     @Inject BundleContext bundleContext;
     @Inject SourceInstallService sourceInstallService;
 
-	@After
+/*    
+    @Before
+    public void before() {
+        bundleContext.addBundleListener(new LoggingBundleListener());
+        bundleContext.addServiceListener(new LoggingServiceListener());
+    }
+*/
+    @After
     @Override
     public void close() throws Exception {
         sourceInstallService.close();
@@ -46,28 +64,44 @@ public class SourceInstallServiceTest implements AutoCloseable {
         return options(
                 systemProperty("pax.exam.osgi.unresolved.fail").value("true"),
                 mavenBundle("com.google.guava", "guava", "20.0"),
+                wrappedBundle(maven("org.awaitility", "awaitility", "2.0.0")),
                 bundle("file:../org.gradle.tooling.osgi/build/libs/org.gradle.tooling.osgi-3.3.jar"),
                 bundle("file:../ch.vorburger.osgi.gradle/build/libs/ch.vorburger.osgi.gradle-1.0.0-SNAPSHOT.jar"),
+                bundle("file:../ch.vorburger.osgi.gradle.test.bundle.api/build/libs/ch.vorburger.osgi.gradle.test.bundle.api-1.0.0-SNAPSHOT.jar"),
                 junitBundles());
     }
 
     @Test
     public void testSourceInstallService() throws Exception {
         assertNotNull(sourceInstallService);
-        // TODO write TestService.java v1 "welcome, world"
-        Future<Bundle> futureBundle = sourceInstallService.installSourceBundle(new File("../ch.vorburger.osgi.gradle.test.bundle"));
+        changeTestService("howdy, world");
+        Future<Bundle> futureBundle = sourceInstallService.installSourceBundle(testBundleProjectDir);
         try {
             Bundle bundle = futureBundle.get(30, TimeUnit.SECONDS);
             bundle.start();
-            ServiceReference<TestService> serviceRef = bundleContext.getServiceReference(TestService.class);
-            TestService testService = bundleContext.getService(serviceRef);
-            assertEquals("hello, world", testService.sayHello());
+            assertThat(sayHello(), is("howdy, world"));
 
-            // TODO write TestService.java v2 "hello, world", assert changed
-
-            // TODO stop/close test.bundle, write TestService.java v3, assert no more changes
+            changeTestService("changed, world");
+            await().atMost(10, SECONDS).until(() -> sayHello(), is("changed, world"));
         } finally {
+            changeTestService("hello, world");
             futureBundle.cancel(true);
+        }
+    }
+
+    private void changeTestService(String helloMessage) throws IOException {
+        String javaSource = Files.toString(testBundleSourceFile, Charsets.UTF_8);
+        javaSource = javaSource.replaceFirst("/\\* ### \\*/ \".*\"", "/* ### */ \"" + helloMessage + "\"");
+        Files.write(javaSource, testBundleSourceFile, Charsets.UTF_8);
+    }
+
+    private String sayHello() {
+        ServiceReference<TestService> serviceRef = bundleContext.getServiceReference(TestService.class);
+        if (serviceRef != null) {
+            TestService testService = bundleContext.getService(serviceRef);
+            return testService.sayHello();
+        } else {
+            return null;
         }
     }
 

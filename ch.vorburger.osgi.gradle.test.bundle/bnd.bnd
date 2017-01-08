@@ -1,4 +1,0 @@
-Bundle-Activator: \
-   ${classes;IMPLEMENTS;org.osgi.framework.BundleActivator}
-
-Export-Package: ch.vorburger.osgi.gradle.test.bundle

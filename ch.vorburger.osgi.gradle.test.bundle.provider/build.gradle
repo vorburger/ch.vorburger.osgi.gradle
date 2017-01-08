@@ -1,0 +1,5 @@
+
+dependencies {
+  compile 'org.osgi:org.osgi.core:6.0.0'
+  compile project(":ch.vorburger.osgi.gradle.test.bundle.api")
+}

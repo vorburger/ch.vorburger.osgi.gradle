@@ -1,9 +1,4 @@
 
-SourceInstallServiceTest TODO reload testing
-
-use https://github.com/google/guava/wiki/ListenableFutureExplained
-useful to "chain" BuildService in SourceInstallService
-
 LICENSE headers & maven enforcement
 
 GitHub public & BLOG (incl. link to https://github.com/stempler/bnd-platform as alternative)

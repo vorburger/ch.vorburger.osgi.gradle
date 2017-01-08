@@ -35,11 +35,15 @@ public class SourceInstallServiceImpl implements SourceInstallService, AutoClose
         SettableFuture<Bundle> installFuture = SettableFuture.create();
         /* Future<?> buildFuture = */buildService.buildContinously(projectDirectory, "build", singleProducedFile -> {
             // TODO handle rebuild & update!  NB: Can only set future once..
-            try {
-                InputStream inputStream = new FileInputStream(singleProducedFile);
-                Bundle bundle = bundleContext.installBundle("source:" + projectDirectory.toURI().toString(), inputStream);
+            try (InputStream inputStream = new FileInputStream(singleProducedFile)) {
+                String location = "source:" + projectDirectory.toURI().toString();
+                Bundle bundle = bundleContext.getBundle(location);
+                if (bundle == null) {
+                    bundle = bundleContext.installBundle(location, inputStream);
+                } else {
+                    bundle.update(inputStream);
+                }
                 installFuture.set(bundle);
-                inputStream.close();
             } catch (BundleException | IOException e) {
                 LOG.error("Problem reading/installing bundle JAR built from source: {}", singleProducedFile, e);
                 installFuture.setException(e);
