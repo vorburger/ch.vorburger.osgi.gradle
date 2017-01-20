@@ -51,7 +51,6 @@ public class SourceInstallServiceImpl implements SourceInstallService, AutoClose
     public Future<Bundle> installSourceBundle(File projectDirectory) {
         SettableFuture<Bundle> installFuture = SettableFuture.create();
         /* Future<?> buildFuture = */buildService.buildContinously(projectDirectory, "build", singleProducedFile -> {
-            // TODO handle rebuild & update!  NB: Can only set future once..
             try (InputStream inputStream = new FileInputStream(singleProducedFile)) {
                 String location = "source:" + projectDirectory.toURI().toString();
                 Bundle bundle = bundleContext.getBundle(location);
