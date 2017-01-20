@@ -18,6 +18,9 @@
 package ch.vorburger.osgi.gradle.internal;
 
 import ch.vorburger.osgi.gradle.SourceInstallService;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.SettableFuture;
 import java.io.File;
 import java.io.FileInputStream;
@@ -50,7 +53,7 @@ public class SourceInstallServiceImpl implements SourceInstallService, AutoClose
     @Override
     public Future<Bundle> installSourceBundle(File projectDirectory) {
         SettableFuture<Bundle> installFuture = SettableFuture.create();
-        /* Future<?> buildFuture = */buildService.buildContinously(projectDirectory, "build", singleProducedFile -> {
+        BuildServiceSingleFileOutputListener listener = singleProducedFile -> {
             try (InputStream inputStream = new FileInputStream(singleProducedFile)) {
                 String location = "source:" + projectDirectory.toURI().toString();
                 Bundle bundle = bundleContext.getBundle(location);
@@ -63,6 +66,20 @@ public class SourceInstallServiceImpl implements SourceInstallService, AutoClose
             } catch (BundleException | IOException e) {
                 LOG.error("Problem reading/installing bundle JAR built from source: {}", singleProducedFile, e);
                 installFuture.setException(e);
+            }
+        };
+        ListenableFuture<Void> buildFuture = buildService.buildContinously(projectDirectory, "build", listener);
+        Futures.addCallback(buildFuture, new FutureCallback<Void>() {
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                // If this happens, then the listener above will never get invoked
+                // because the (first, as it's continous) build failed before, so:
+                installFuture.setException(throwable);
+            }
+
+            @Override
+            public void onSuccess(Void nothing) {
             }
         });
         return installFuture;

@@ -17,8 +17,8 @@
  */
 package ch.vorburger.osgi.gradle.internal;
 
+import com.google.common.util.concurrent.ListenableFuture;
 import java.io.File;
-import java.util.concurrent.Future;
 
 /**
  * Builds source code (using Gradle).
@@ -27,11 +27,11 @@ import java.util.concurrent.Future;
  */
 public interface BuildService extends AutoCloseable {
 
-    Future<?> build(File projectDirectory, String... tasks);
+    ListenableFuture<Void> build(File projectDirectory, String... tasks);
 
-    Future<?> buildContinously(File projectDirectory, String task, BuildServiceListener listener);
+    ListenableFuture<Void> buildContinously(File projectDirectory, String task, BuildServiceListener listener);
 
-    default Future<?> buildContinously(File projectDirectory, String task, BuildServiceSingleFileOutputListener listener) {
+    default ListenableFuture<Void> buildContinously(File projectDirectory, String task, BuildServiceSingleFileOutputListener listener) {
         return buildContinously(projectDirectory, task, new BuildServiceListenerAdapter(projectDirectory, listener));
     }
 

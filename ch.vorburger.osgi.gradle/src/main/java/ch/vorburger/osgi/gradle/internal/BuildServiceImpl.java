@@ -19,10 +19,11 @@ package ch.vorburger.osgi.gradle.internal;
 
 import ch.vorburger.osgi.gradle.internal.LoggingOutputStream.Level;
 import ch.vorburger.osgi.gradle.internal.concurrent.ExecutorServiceProviderSingleton;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import java.io.File;
 import java.util.Arrays;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
+import java.util.concurrent.Callable;
 import org.gradle.tooling.BuildLauncher;
 import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.ProjectConnection;
@@ -39,19 +40,19 @@ public class BuildServiceImpl implements BuildService, AutoCloseable {
 
     // private static final Logger LOG = LoggerFactory.getLogger(BuildServiceImpl.class);
 
-    private final ExecutorService executorService;
+    private final ListeningExecutorService executorService;
 
     public BuildServiceImpl() {
         this(ExecutorServiceProviderSingleton.INSTANCE.newCachedThreadPool("BuildService"));
     }
 
-    public BuildServiceImpl(ExecutorService executorService) {
+    public BuildServiceImpl(ListeningExecutorService executorService) {
         this.executorService = executorService;
     }
 
-    private Future<?> build(File projectDirectory, String[] tasks, boolean continuous, BuildServiceListener listener) {
+    private ListenableFuture<Void> build(File projectDirectory, String[] tasks, boolean continuous, BuildServiceListener listener) {
         Logger logger = LoggerFactory.getLogger(getClass().getSimpleName() + " (" + projectDirectory.toString() + ")");
-        Future<?> future = executorService.submit(() -> {
+        ListenableFuture<Void> future = executorService.submit((Callable<Void>) () -> {
             ProjectConnection connection = GradleConnector.newConnector()
                     .forProjectDirectory(projectDirectory)
                     .connect();
@@ -82,6 +83,7 @@ public class BuildServiceImpl implements BuildService, AutoCloseable {
                     }});
 */
                 launcher.run();
+                return null;
             } finally {
                 if (!executorService.isShutdown()) {
                     connection.close();
@@ -94,12 +96,12 @@ public class BuildServiceImpl implements BuildService, AutoCloseable {
     }
 
     @Override
-    public Future<?> build(File projectDirectory, String... tasks) {
+    public ListenableFuture<Void> build(File projectDirectory, String... tasks) {
         return build(projectDirectory, tasks, false, () -> {});
     }
 
     @Override
-    public Future<?> buildContinously(File projectDirectory, String task, BuildServiceListener listener) {
+    public ListenableFuture<Void> buildContinously(File projectDirectory, String task, BuildServiceListener listener) {
         return build(projectDirectory, new String[] { task }, true, listener);
     }
 
