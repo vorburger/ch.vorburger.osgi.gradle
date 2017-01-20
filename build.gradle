@@ -34,7 +34,7 @@ subprojects {
   apply plugin: 'biz.aQute.bnd.builder'
 
   repositories {
-    mavenLocal()
+    // NOT NEEDED (and prevents download of source+JavaDoc JARs): mavenLocal()
     jcenter() // maven { url "http://repo.maven.apache.org/maven2" }
     maven { url "http://repo.spongepowered.org/maven" }
   }
