@@ -17,8 +17,8 @@
  */
 package ch.vorburger.osgi.gradle;
 
+import com.google.common.util.concurrent.ListenableFuture;
 import java.io.File;
-import java.util.concurrent.Future;
 import org.osgi.framework.Bundle;
 
 /**
@@ -36,6 +36,6 @@ public interface SourceInstallService extends AutoCloseable {
      * @param projectDirectory location of a Gradle buildable project
      * @return a Future of the installed Bundle
      */
-    Future<Bundle> installSourceBundle(File projectDirectory);
+    ListenableFuture<Bundle> installSourceBundle(File projectDirectory);
 
 }

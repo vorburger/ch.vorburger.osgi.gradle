@@ -26,7 +26,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.concurrent.Future;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
@@ -51,7 +50,7 @@ public class SourceInstallServiceImpl implements SourceInstallService, AutoClose
     }
 
     @Override
-    public Future<Bundle> installSourceBundle(File projectDirectory) {
+    public ListenableFuture<Bundle> installSourceBundle(File projectDirectory) {
         SettableFuture<Bundle> installFuture = SettableFuture.create();
         BuildServiceSingleFileOutputListener listener = singleProducedFile -> {
             try (InputStream inputStream = new FileInputStream(singleProducedFile)) {
