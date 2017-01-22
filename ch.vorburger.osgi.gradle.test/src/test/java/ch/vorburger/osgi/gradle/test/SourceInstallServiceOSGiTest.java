@@ -55,7 +55,7 @@ import org.osgi.framework.ServiceReference;
  * @author Michael Vorburger
  */
 @RunWith(PaxExam.class)
-public class SourceInstallServiceTest implements AutoCloseable {
+public class SourceInstallServiceOSGiTest implements AutoCloseable {
 
     final File testBundleProjectDir = new File("../ch.vorburger.osgi.gradle.test.bundle.provider");
     final File testBundleSourceFile = new File(testBundleProjectDir, "src/main/java/ch/vorburger/osgi/gradle/test/bundle/provider/TestServiceImpl.java");
