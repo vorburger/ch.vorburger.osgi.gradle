@@ -63,7 +63,7 @@ public class SourceInstallServiceTest implements AutoCloseable {
     @Inject BundleContext bundleContext;
     @Inject SourceInstallService sourceInstallService;
 
-/*    
+/*
     @Before
     public void before() {
         bundleContext.addBundleListener(new LoggingBundleListener());
@@ -80,7 +80,7 @@ public class SourceInstallServiceTest implements AutoCloseable {
     public Option[] config() {
         return options(
                 systemProperty("pax.exam.osgi.unresolved.fail").value("true"),
-                mavenBundle("com.google.guava", "guava", "20.0"),
+                mavenBundle("com.google.guava", "guava", "17.0"),
                 wrappedBundle(maven("org.awaitility", "awaitility", "2.0.0")),
                 bundle("file:../org.gradle.tooling.osgi/build/libs/org.gradle.tooling.osgi-3.3.jar"),
                 bundle("file:../ch.vorburger.osgi.gradle/build/libs/ch.vorburger.osgi.gradle-1.0.0-SNAPSHOT.jar"),

@@ -17,7 +17,10 @@
  */
 package ch.vorburger.osgi.gradle.internal.tests;
 
-import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import ch.vorburger.osgi.gradle.internal.LoggingOutputStream;
 import ch.vorburger.osgi.gradle.internal.LoggingOutputStream.Level;
 import java.util.LinkedList;
@@ -42,19 +45,19 @@ public class LoggingOutputStreamTest {
                         new SubstituteLogger("noop", null, true),
                         queue),
                 Level.ERROR);
-        assertThat(queue).isEmpty();
+        assertTrue(queue.isEmpty());
         loggingOutputStream.append('h');
-        assertThat(queue).isEmpty();
+        assertTrue(queue.isEmpty());
         loggingOutputStream.write('e');
-        assertThat(queue).isEmpty();
+        assertTrue(queue.isEmpty());
         loggingOutputStream.print("llo, ");
-        assertThat(queue).isEmpty();
+        assertTrue(queue.isEmpty());
         loggingOutputStream.println("world");
-        assertThat(queue).isNotEmpty();
-        assertThat(queue.remove().getMessage()).isEqualTo("hello, world");
-        assertThat(queue).isEmpty();
+        assertFalse(queue.isEmpty());
+        assertEquals("hello, world", queue.remove().getMessage());
+        assertTrue(queue.isEmpty());
         loggingOutputStream.println("another message");
-        assertThat(queue.remove().getMessage()).isEqualTo("another message");
+        assertEquals("another message", queue.remove().getMessage());
         loggingOutputStream.close();
     }
 
