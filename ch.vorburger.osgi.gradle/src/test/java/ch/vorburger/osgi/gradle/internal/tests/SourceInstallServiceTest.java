@@ -1,7 +1,7 @@
 /**
  * ch.vorburger.osgi.gradle
  *
- * Copyright (C) 2017 - 2017 Michael Vorburger.ch <mike@vorburger.ch>
+ * Copyright (C) 2016 - 2017 Michael Vorburger.ch <mike@vorburger.ch>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ public class SourceInstallServiceTest {
     @Test(expected = ExecutionException.class)
     public void testExceptionInBuildServiceImplInsideExecutor() throws Exception {
         try (SourceInstallService sourceInstallService = new SourceInstallServiceImpl(null)) {
-            sourceInstallService.installSourceBundle(new File("badDirectory")).get(3, TimeUnit.SECONDS);
+            sourceInstallService.installSourceBundle(new File("badDirectory")).get(6, TimeUnit.SECONDS);
         }
     }
 
