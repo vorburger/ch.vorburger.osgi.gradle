@@ -18,7 +18,6 @@
 package ch.vorburger.osgi.gradle.internal;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -39,21 +38,24 @@ class BuildServiceListenerAdapter implements BuildServiceListener {
 
     @Override
     public final void buildSucceeded() {
-        getSingleJarFile().ifPresent(file -> listener.buildSucceeded(file));
+        getSingleJarFile().ifPresent(listener::buildSucceeded);
     }
 
     protected Optional<File> getSingleJarFile() {
         File buildLibsDir = new File(projectDirectory, "build/libs");
+        if (!buildLibsDir.exists()) {
+            buildLibsDir = new File(projectDirectory, "target");
+        }
         // NB: Filter out any *-all JARs.. Those are typically produced by a "shadow" kinda plugin,
         // and can be used to build "fat" library JARs usable outside of OSGi environments.  For
         // OSGi, we'd instead of BND to embed JARs (differently).
-        File[] jarFiles = buildLibsDir.listFiles((FilenameFilter) (dir, name) -> name.endsWith(".jar") && !name.endsWith("-all.jar"));
-        if (jarFiles.length == 0) {
-            LOG.error("After succesful build, no *.jar found in: {}", buildLibsDir.getAbsolutePath());
+        File[] jarFiles = buildLibsDir.listFiles((dir, name) -> name.endsWith(".jar") && !name.endsWith("-all.jar"));
+        if (jarFiles == null || jarFiles.length == 0) {
+            LOG.error("After successful build, no *.jar found in: {}", buildLibsDir.getAbsolutePath());
             return Optional.empty();
         } else if (jarFiles.length > 1) {
             List<File> jarFileList = Arrays.asList(jarFiles);
-            LOG.error("After succesful build, more than 1 *.jar/s found, can't choose, ignoring all: {}", jarFileList);
+            LOG.error("After successful build, more than 1 *.jar/s found, can't choose, ignoring all: {}", jarFileList);
             return Optional.empty();
         } else {
             return Optional.of(jarFiles[0]);

@@ -36,23 +36,21 @@ import org.slf4j.LoggerFactory;
  *
  * @author Michael Vorburger
  */
-public class BuildServiceImpl implements BuildService, AutoCloseable {
-
-    // private static final Logger LOG = LoggerFactory.getLogger(BuildServiceImpl.class);
+public class GradleBuildService implements BuildService, AutoCloseable {
 
     private final ListeningExecutorService executorService;
 
-    public BuildServiceImpl() {
+    public GradleBuildService() {
         this(ExecutorServiceProviderSingleton.INSTANCE.newCachedThreadPool("BuildService"));
     }
 
-    public BuildServiceImpl(ListeningExecutorService executorService) {
+    public GradleBuildService(ListeningExecutorService executorService) {
         this.executorService = executorService;
     }
 
     private ListenableFuture<Void> build(File projectDirectory, String[] tasks, boolean continuous, BuildServiceListener listener) {
         Logger logger = LoggerFactory.getLogger(getClass().getSimpleName() + " (" + projectDirectory.toString() + ")");
-        ListenableFuture<Void> future = executorService.submit((Callable<Void>) () -> {
+        ListenableFuture<Void> future = executorService.submit(() -> {
             ProjectConnection connection = GradleConnector.newConnector()
                     .forProjectDirectory(projectDirectory)
                     .connect();
@@ -70,18 +68,7 @@ public class BuildServiceImpl implements BuildService, AutoCloseable {
                         listener.buildSucceeded();
                     }
                 });
-/*
-                launcher.run(new ResultHandler<Void>() {
-                    @Override
-                    public void onComplete(Void result) {
-                        logger.info("onComplete()");
-                    }
 
-                    @Override
-                    public void onFailure(GradleConnectionException failure) {
-                        logger.error("onFailure()", failure);
-                    }});
-*/
                 launcher.run();
                 return null;
             } finally {
