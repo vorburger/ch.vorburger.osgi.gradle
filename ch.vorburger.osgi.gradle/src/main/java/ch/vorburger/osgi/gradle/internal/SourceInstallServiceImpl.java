@@ -18,6 +18,7 @@
 package ch.vorburger.osgi.gradle.internal;
 
 import ch.vorburger.osgi.gradle.SourceInstallService;
+import ch.vorburger.osgi.maven.internal.MavenBuildService;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -43,7 +44,8 @@ public class SourceInstallServiceImpl implements SourceInstallService, AutoClose
     private static final Logger LOG = LoggerFactory.getLogger(SourceInstallServiceImpl.class);
 
     private final BundleContext bundleContext;
-    private final BuildService buildService = new BuildServiceImpl();
+    private final BuildService gradleBuildService = new GradleBuildService();
+    private final BuildService mavenBuildService = new MavenBuildService();
 
     public SourceInstallServiceImpl(BundleContext bundleContext) {
         this.bundleContext = bundleContext;
@@ -67,7 +69,14 @@ public class SourceInstallServiceImpl implements SourceInstallService, AutoClose
                 installFuture.setException(e);
             }
         };
-        ListenableFuture<Void> buildFuture = buildService.buildContinously(projectDirectory, "build", listener);
+
+        ListenableFuture<Void> buildFuture;
+        if (new File(projectDirectory, "pom.xml").exists()) {
+            buildFuture = mavenBuildService.buildContinously(projectDirectory, "install", listener);
+        } else {
+            buildFuture = gradleBuildService.buildContinously(projectDirectory, "build", listener);
+        }
+
         Futures.addCallback(buildFuture, new FutureCallback<Void>() {
 
             @Override
@@ -87,7 +96,7 @@ public class SourceInstallServiceImpl implements SourceInstallService, AutoClose
     @Override
     // TODO @Deactivate
     public void close() throws Exception {
-        buildService.close();
+        gradleBuildService.close();
     }
 
 }

@@ -17,15 +17,16 @@
  */
 package ch.vorburger.osgi.gradle.internal.tests;
 
-import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.awaitility.Awaitility.await;
-
-import ch.vorburger.osgi.gradle.internal.BuildService;
-import ch.vorburger.osgi.gradle.internal.BuildServiceImpl;
-import ch.vorburger.osgi.gradle.internal.BuildServiceListener;
 import java.io.File;
 import java.util.concurrent.Future;
+
+import ch.vorburger.osgi.gradle.internal.BuildService;
+import ch.vorburger.osgi.gradle.internal.BuildServiceListener;
+import ch.vorburger.osgi.gradle.internal.GradleBuildService;
 import org.junit.Test;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.awaitility.Awaitility.await;
 
 /**
  * BuildService Test (non-OSGi).
@@ -38,7 +39,7 @@ public class BuildServiceTest {
 
     @Test
     public void help() throws Exception {
-        try (BuildService buildService = new BuildServiceImpl()) {
+        try (BuildService buildService = new GradleBuildService()) {
             Future<?> future = buildService.build(testProjectDirectory, "help");
             try {
                 future.get(30, SECONDS);
@@ -50,7 +51,7 @@ public class BuildServiceTest {
 
     @Test
     public void build() throws Exception {
-        try (BuildService buildService = new BuildServiceImpl()) {
+        try (BuildService buildService = new GradleBuildService()) {
             Future<?> future = buildService.build(testProjectDirectory, "build");
             try {
                 future.get(30, SECONDS);
@@ -62,7 +63,7 @@ public class BuildServiceTest {
 
     @Test
     public void buildContinously() throws Exception {
-        try (BuildService buildService = new BuildServiceImpl()) {
+        try (BuildService buildService = new GradleBuildService()) {
             TestBuildServiceListener testStoppingBuildServiceListener = new TestBuildServiceListener();
             buildService.buildContinously(testProjectDirectory, "build", testStoppingBuildServiceListener);
             await().atMost(30, SECONDS).until(() -> testStoppingBuildServiceListener.succeeded);
