@@ -97,6 +97,7 @@ public class SourceInstallServiceImpl implements SourceInstallService, AutoClose
     // TODO @Deactivate
     public void close() throws Exception {
         gradleBuildService.close();
+        mavenBuildService.close();
     }
 
 }
