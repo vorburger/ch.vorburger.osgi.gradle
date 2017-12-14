@@ -22,25 +22,20 @@ import java.util.concurrent.Future;
 
 import ch.vorburger.osgi.gradle.internal.BuildService;
 import ch.vorburger.osgi.gradle.internal.BuildServiceListener;
-import ch.vorburger.osgi.gradle.internal.GradleBuildService;
-import org.junit.Test;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.awaitility.Awaitility.await;
 
 /**
- * BuildService Test (non-OSGi).
- *
- * @author Michael Vorburger
+ * Base class for the builder services
  */
-public class BuildServiceTest {
+abstract class AbstractBuildServiceTest {
 
-    File testProjectDirectory = new File("../ch.vorburger.osgi.gradle.test.bundle.provider");
+    abstract BuildService createBuilderUnderTest();
 
-    @Test
-    public void help() throws Exception {
-        try (BuildService buildService = new GradleBuildService()) {
-            Future<?> future = buildService.build(testProjectDirectory, "help");
+    void testBuild(File testProjectDirectory, String task) throws Exception {
+        try (BuildService buildService = createBuilderUnderTest()) {
+            Future<?> future = buildService.build(testProjectDirectory, task);
             try {
                 future.get(30, SECONDS);
             } finally {
@@ -49,28 +44,15 @@ public class BuildServiceTest {
         }
     }
 
-    @Test
-    public void build() throws Exception {
-        try (BuildService buildService = new GradleBuildService()) {
-            Future<?> future = buildService.build(testProjectDirectory, "build");
-            try {
-                future.get(30, SECONDS);
-            } finally {
-                future.cancel(true);
-            }
-        }
-    }
-
-    @Test
-    public void buildContinously() throws Exception {
-        try (BuildService buildService = new GradleBuildService()) {
+    void testBuildContinuously(File testProjectDirectory, String task) throws Exception {
+        try (BuildService buildService = createBuilderUnderTest()) {
             TestBuildServiceListener testStoppingBuildServiceListener = new TestBuildServiceListener();
-            buildService.buildContinously(testProjectDirectory, "build", testStoppingBuildServiceListener);
+            buildService.buildContinously(testProjectDirectory, task, testStoppingBuildServiceListener);
             await().atMost(30, SECONDS).until(() -> testStoppingBuildServiceListener.succeeded);
         }
     }
 
-    private static class TestBuildServiceListener implements BuildServiceListener {
+    protected static class TestBuildServiceListener implements BuildServiceListener {
         boolean succeeded = false;
 
         @Override
