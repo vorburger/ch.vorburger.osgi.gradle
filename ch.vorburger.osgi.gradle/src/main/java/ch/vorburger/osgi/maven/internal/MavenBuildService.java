@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package ch.vorburger.osgi.maven.internal;
 
 import java.io.File;
@@ -49,7 +48,7 @@ import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 
 /**
- *
+ * Implementation of BuildService for Gradle.
  */
 public class MavenBuildService implements BuildService {
 
@@ -58,7 +57,7 @@ public class MavenBuildService implements BuildService {
 
 
     public MavenBuildService() {
-        this(ExecutorServiceProviderSingleton.INSTANCE.newCachedThreadPool("BuildService"));
+        this(ExecutorServiceProviderSingleton.INSTANCE.newCachedThreadPool("MavenBuildService"));
     }
 
     public MavenBuildService(ListeningExecutorService executorService) {

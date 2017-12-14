@@ -23,7 +23,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import java.io.File;
 import java.util.Arrays;
-import java.util.concurrent.Callable;
 import org.gradle.tooling.BuildLauncher;
 import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.ProjectConnection;
@@ -32,7 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Implementation of BuildService.
+ * Implementation of BuildService for Gradle.
  *
  * @author Michael Vorburger
  */
@@ -41,7 +40,7 @@ public class GradleBuildService implements BuildService, AutoCloseable {
     private final ListeningExecutorService executorService;
 
     public GradleBuildService() {
-        this(ExecutorServiceProviderSingleton.INSTANCE.newCachedThreadPool("BuildService"));
+        this(ExecutorServiceProviderSingleton.INSTANCE.newCachedThreadPool("GradleBuildService"));
     }
 
     public GradleBuildService(ListeningExecutorService executorService) {
