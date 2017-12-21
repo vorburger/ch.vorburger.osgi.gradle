@@ -23,16 +23,14 @@ import ch.vorburger.osgi.gradle.internal.BuildService;
 import ch.vorburger.osgi.gradle.internal.GradleBuildService;
 import org.junit.Test;
 
-import static org.awaitility.Awaitility.await;
-
 /**
- * GradleBuildService Test (non-OSGi).
+ * {@link GradleBuildService} Test (non-OSGi).
  *
  * @author Michael Vorburger
  */
 public class GradleBuildServiceTest extends AbstractBuildServiceTest {
 
-    private File testProjectDirectory = new File("../ch.vorburger.osgi.gradle.test.bundle.provider");
+    private final File testProjectDirectory = new File("../ch.vorburger.osgi.gradle.test.bundle.provider");
 
     @Test
     public void help() throws Exception {
