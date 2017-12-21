@@ -24,7 +24,7 @@ import ch.vorburger.osgi.maven.internal.MavenBuildService;
 import org.junit.Test;
 
 /**
- * GradleBuildService Test (non-OSGi).
+ * {@link MavenBuildService} Test (non-OSGi).
  */
 public class MavenBuildServiceTest extends AbstractBuildServiceTest {
 

@@ -48,7 +48,7 @@ import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 
 /**
- * Implementation of BuildService for Gradle.
+ * Implementation of BuildService for Maven.
  */
 public class MavenBuildService implements BuildService {
 
@@ -68,7 +68,7 @@ public class MavenBuildService implements BuildService {
         }
         this.executorService = executorService;
     }
-    
+
     private ListenableFuture<Void> build(File projectDirectory, String[] tasks, boolean continuous, BuildServiceListener listener) {
         return executorService.submit(() -> {
             build(projectDirectory, tasks, listener);
@@ -144,14 +144,16 @@ public class MavenBuildService implements BuildService {
     }
 
     private static File searchPath(final String path, final String... lookFor) {
-        if (path == null)
+        if (path == null) {
             return null;
+        }
 
         for (final String p : path.split(File.pathSeparator)) {
             for (String command : lookFor) {
                 final File e = new File(p, command);
-                if (e.isFile())
+                if (e.isFile()) {
                     return e.getAbsoluteFile();
+                }
             }
         }
         return null;
@@ -171,5 +173,5 @@ public class MavenBuildService implements BuildService {
     public void close() throws Exception {
         executorService.shutdownNow();
     }
-    
+
 }
