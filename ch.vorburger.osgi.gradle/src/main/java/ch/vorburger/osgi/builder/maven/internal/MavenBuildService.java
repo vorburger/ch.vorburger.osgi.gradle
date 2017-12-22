@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ch.vorburger.osgi.maven.builder.internal;
+package ch.vorburger.osgi.builder.maven.internal;
 
 import java.io.File;
 import java.io.IOException;

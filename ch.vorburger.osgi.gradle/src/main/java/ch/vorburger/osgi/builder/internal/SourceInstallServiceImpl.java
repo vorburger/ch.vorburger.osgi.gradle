@@ -18,8 +18,8 @@
 package ch.vorburger.osgi.builder.internal;
 
 import ch.vorburger.osgi.builder.gradle.internal.GradleBuildService;
+import ch.vorburger.osgi.builder.maven.internal.MavenBuildService;
 import ch.vorburger.osgi.builder.SourceInstallService;
-import ch.vorburger.osgi.maven.builder.internal.MavenBuildService;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
