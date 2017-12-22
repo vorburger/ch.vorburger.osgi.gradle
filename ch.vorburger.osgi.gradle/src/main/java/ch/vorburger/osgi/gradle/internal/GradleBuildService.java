@@ -37,10 +37,12 @@ import org.slf4j.LoggerFactory;
  */
 public class GradleBuildService implements BuildService, AutoCloseable {
 
+    private static final Logger LOG = LoggerFactory.getLogger(GradleBuildService.class);
+
     private final ListeningExecutorService executorService;
 
     public GradleBuildService() {
-        this(ExecutorServiceProviderSingleton.INSTANCE.newCachedThreadPool("GradleBuildService"));
+        this(ExecutorServiceProviderSingleton.INSTANCE.newCachedThreadPool(LOG, "GradleBuildService"));
     }
 
     public GradleBuildService(ListeningExecutorService executorService) {
