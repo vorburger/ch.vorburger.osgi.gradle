@@ -18,8 +18,11 @@
 package ch.vorburger.osgi.gradle.internal.concurrent;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import org.slf4j.Logger;
 
 /**
@@ -27,16 +30,40 @@ import org.slf4j.Logger;
  *
  * @author Michael Vorburger
  */
-public interface ExecutorServiceProvider {
+public final class ExecutorServiceProvider {
+
+    private ExecutorServiceProvider() { }
 
     /**
      * See {@link Executors#newCachedThreadPool()}.
      */
-    ListeningExecutorService newCachedThreadPool(Logger logger, String poolName);
+    public static ListeningExecutorService newCachedThreadPool(Logger logger, String poolName) {
+        return MoreExecutors.listeningDecorator(
+                Executors.unconfigurableExecutorService(
+                        Executors.newCachedThreadPool(newNamedThreadFactory(logger, poolName))));
+    }
 
     /**
      * See {@link Executors#newFixedThreadPool(int)} and {@link Executors#newSingleThreadExecutor()}.
      */
-    ListeningExecutorService newFixedThreadPool(Logger logger, int nThreads, String poolName);
+    public static ListeningExecutorService newFixedThreadPool(Logger logger, int nThreads, String poolName) {
+        if (nThreads != 1) {
+            return MoreExecutors.listeningDecorator(
+                    Executors.unconfigurableExecutorService(
+                            Executors.newFixedThreadPool(nThreads, newNamedThreadFactory(logger, poolName))));
+        } else {
+            return MoreExecutors.listeningDecorator(
+                    Executors.unconfigurableExecutorService(
+                            Executors.newSingleThreadExecutor(newNamedThreadFactory(logger, poolName))));
+        }
+    }
+
+    private static ThreadFactory newNamedThreadFactory(Logger logger, String poolName) {
+        // as in https://github.com/opendaylight/infrautils/blob/master/common/util/src/main/java/org/opendaylight/infrautils/utils/concurrent/ThreadFactoryProvider.java
+        return new ThreadFactoryBuilder()
+                .setNameFormat(poolName + "-%d")
+                .setUncaughtExceptionHandler((thread, throwable) -> logger.error("Thread terminated due to uncaught exception: {}", thread.getName(), throwable))
+                .build();
+    }
 
 }

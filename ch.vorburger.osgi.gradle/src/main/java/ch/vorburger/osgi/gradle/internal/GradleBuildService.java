@@ -18,7 +18,7 @@
 package ch.vorburger.osgi.gradle.internal;
 
 import ch.vorburger.osgi.gradle.internal.LoggingOutputStream.Level;
-import ch.vorburger.osgi.gradle.internal.concurrent.ExecutorServiceProviderSingleton;
+import ch.vorburger.osgi.gradle.internal.concurrent.ExecutorServiceProvider;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import java.io.File;
@@ -42,7 +42,7 @@ public class GradleBuildService implements BuildService, AutoCloseable {
     private final ListeningExecutorService executorService;
 
     public GradleBuildService() {
-        this(ExecutorServiceProviderSingleton.INSTANCE.newCachedThreadPool(LOG, "GradleBuildService"));
+        this(ExecutorServiceProvider.newCachedThreadPool(LOG, "GradleBuildService"));
     }
 
     public GradleBuildService(ListeningExecutorService executorService) {
