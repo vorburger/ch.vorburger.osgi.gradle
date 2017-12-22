@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ch.vorburger.osgi.maven.internal;
+package ch.vorburger.osgi.maven.builder.internal;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,10 +29,9 @@ import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
-
-import ch.vorburger.osgi.gradle.internal.BuildService;
-import ch.vorburger.osgi.gradle.internal.BuildServiceListener;
-import ch.vorburger.osgi.gradle.internal.concurrent.ExecutorServiceProvider;
+import ch.vorburger.osgi.builder.internal.BuildService;
+import ch.vorburger.osgi.builder.internal.BuildServiceListener;
+import ch.vorburger.osgi.builder.internal.ExecutorServiceProvider;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import org.apache.maven.shared.invoker.DefaultInvocationRequest;

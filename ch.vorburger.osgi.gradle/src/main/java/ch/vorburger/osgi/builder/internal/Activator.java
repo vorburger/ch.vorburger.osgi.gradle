@@ -15,21 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ch.vorburger.osgi.gradle.internal;
+package ch.vorburger.osgi.builder.internal;
 
-import ch.vorburger.osgi.gradle.SourceInstallService;
+import ch.vorburger.osgi.builder.SourceInstallService;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
 // TODO remove once @Component on SourceInstallServiceImpl works
 public class Activator implements BundleActivator {
 
-    private SourceInstallService sourceInstallService;
+    private SourceInstallServiceImpl sourceInstallService;
 
     @Override
     public void start(BundleContext context) throws Exception {
         sourceInstallService = new SourceInstallServiceImpl(context);
         context.registerService(SourceInstallService.class, sourceInstallService, null);
+        context.registerService(ch.vorburger.osgi.gradle.SourceInstallService.class, sourceInstallService, null);
     }
 
     @Override

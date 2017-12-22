@@ -15,10 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ch.vorburger.osgi.gradle.internal;
+package ch.vorburger.osgi.builder.internal;
 
-import ch.vorburger.osgi.gradle.SourceInstallService;
-import ch.vorburger.osgi.maven.internal.MavenBuildService;
+import ch.vorburger.osgi.builder.gradle.internal.GradleBuildService;
+import ch.vorburger.osgi.builder.SourceInstallService;
+import ch.vorburger.osgi.maven.builder.internal.MavenBuildService;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -39,7 +40,7 @@ import org.slf4j.LoggerFactory;
  * @author Michael Vorburger
  */
 // TODO @Component
-public class SourceInstallServiceImpl implements SourceInstallService, AutoCloseable {
+public class SourceInstallServiceImpl implements SourceInstallService, ch.vorburger.osgi.gradle.SourceInstallService, AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(SourceInstallServiceImpl.class);
 

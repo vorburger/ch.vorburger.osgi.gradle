@@ -15,16 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ch.vorburger.osgi.gradle.internal.tests;
+package ch.vorburger.osgi.builder.tests;
 
 import java.io.File;
 import java.util.concurrent.Future;
 
-import ch.vorburger.osgi.gradle.internal.BuildService;
-import ch.vorburger.osgi.gradle.internal.BuildServiceListener;
-
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.awaitility.Awaitility.await;
+
+import ch.vorburger.osgi.builder.internal.BuildService;
+import ch.vorburger.osgi.builder.internal.BuildServiceListener;
 
 /**
  * Base class for the builder services
