@@ -1,5 +1,6 @@
 Bundle-Activator: \
    ${classes;IMPLEMENTS;org.osgi.framework.BundleActivator}
 
-Export-Package: ch.vorburger.osgi.gradle
-Export-Package: ch.vorburger.osgi.builder
+Export-Package: \
+    ch.vorburger.osgi.builder,\
+    ch.vorburger.osgi.gradle
