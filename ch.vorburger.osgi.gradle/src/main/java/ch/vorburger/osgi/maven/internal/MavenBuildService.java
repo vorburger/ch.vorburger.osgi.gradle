@@ -32,7 +32,7 @@ import java.util.Arrays;
 
 import ch.vorburger.osgi.gradle.internal.BuildService;
 import ch.vorburger.osgi.gradle.internal.BuildServiceListener;
-import ch.vorburger.osgi.gradle.internal.concurrent.ExecutorServiceProviderSingleton;
+import ch.vorburger.osgi.gradle.internal.concurrent.ExecutorServiceProvider;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import org.apache.maven.shared.invoker.DefaultInvocationRequest;
@@ -58,7 +58,7 @@ public class MavenBuildService implements BuildService {
     private WatchService watcher;
 
     public MavenBuildService() {
-        this(ExecutorServiceProviderSingleton.INSTANCE.newCachedThreadPool(LOG, "MavenBuildService"));
+        this(ExecutorServiceProvider.newCachedThreadPool(LOG, "MavenBuildService"));
     }
 
     public MavenBuildService(ListeningExecutorService executorService) {
