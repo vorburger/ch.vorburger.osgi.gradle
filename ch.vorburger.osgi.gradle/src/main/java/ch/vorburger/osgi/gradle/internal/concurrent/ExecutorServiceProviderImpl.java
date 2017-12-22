@@ -19,41 +19,39 @@ package ch.vorburger.osgi.gradle.internal.concurrent;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
+import org.slf4j.Logger;
 
 public class ExecutorServiceProviderImpl implements ExecutorServiceProvider {
 
     @Override
-    public ListeningExecutorService newCachedThreadPool(String poolName) {
+    public ListeningExecutorService newCachedThreadPool(Logger logger, String poolName) {
         return MoreExecutors.listeningDecorator(
                 Executors.unconfigurableExecutorService(
-                        Executors.newCachedThreadPool(newNamedThreadFactory(poolName))));
+                        Executors.newCachedThreadPool(newNamedThreadFactory(logger, poolName))));
     }
 
     @Override
-    public ListeningExecutorService newWorkStealingPool(String poolName) {
-        return MoreExecutors.listeningDecorator(
-                Executors.unconfigurableExecutorService(
-                        Executors.newWorkStealingPool()));
-    }
-
-    @Override
-    public ListeningExecutorService newFixedThreadPool(int nThreads, String poolName) {
+    public ListeningExecutorService newFixedThreadPool(Logger logger, int nThreads, String poolName) {
         if (nThreads != 1) {
             return MoreExecutors.listeningDecorator(
                     Executors.unconfigurableExecutorService(
-                            Executors.newFixedThreadPool(nThreads, newNamedThreadFactory(poolName))));
+                            Executors.newFixedThreadPool(nThreads, newNamedThreadFactory(logger, poolName))));
         } else {
             return MoreExecutors.listeningDecorator(
                     Executors.unconfigurableExecutorService(
-                            Executors.newSingleThreadExecutor(newNamedThreadFactory(poolName))));
+                            Executors.newSingleThreadExecutor(newNamedThreadFactory(logger, poolName))));
         }
     }
 
-    private ThreadFactory newNamedThreadFactory(String poolName) {
-        // TODO implement creating pools with Thread name set to poolName-#
-        return Executors.defaultThreadFactory();
+    private ThreadFactory newNamedThreadFactory(Logger logger, String poolName) {
+        // as in https://github.com/opendaylight/infrautils/blob/master/common/util/src/main/java/org/opendaylight/infrautils/utils/concurrent/ThreadFactoryProvider.java
+        return new ThreadFactoryBuilder()
+                .setNameFormat(poolName + "-%d")
+                .setUncaughtExceptionHandler((thread, throwable) -> logger.error("Thread terminated due to uncaught exception: {}", thread.getName(), throwable))
+                .build();
     }
 
 }

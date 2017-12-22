@@ -52,12 +52,13 @@ import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
  */
 public class MavenBuildService implements BuildService {
 
+    private static final Logger LOG = LoggerFactory.getLogger(MavenBuildService.class);
+
     private final ListeningExecutorService executorService;
     private WatchService watcher;
 
-
     public MavenBuildService() {
-        this(ExecutorServiceProviderSingleton.INSTANCE.newCachedThreadPool("MavenBuildService"));
+        this(ExecutorServiceProviderSingleton.INSTANCE.newCachedThreadPool(LOG, "MavenBuildService"));
     }
 
     public MavenBuildService(ListeningExecutorService executorService) {
