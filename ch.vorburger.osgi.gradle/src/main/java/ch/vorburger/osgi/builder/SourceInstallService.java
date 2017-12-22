@@ -15,10 +15,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ch.vorburger.osgi.gradle.internal;
+package ch.vorburger.osgi.builder;
 
-public interface BuildServiceListener {
+import com.google.common.util.concurrent.ListenableFuture;
+import java.io.File;
+import org.osgi.framework.Bundle;
 
-    void buildSucceeded();
+/**
+ * Install a Bundle from source into OSGi framework (builds it).
+ *
+ * @author Michael Vorburger
+ */
+public interface SourceInstallService extends AutoCloseable {
+
+    /**
+     * Installs an OSGi bundle from a source code project directory.
+     *
+     * The bundle will NOT be started by this method, yet.
+     *
+     * @param projectDirectory location of a Gradle buildable project
+     * @return a Future of the installed Bundle
+     */
+    ListenableFuture<Bundle> installSourceBundle(File projectDirectory);
 
 }

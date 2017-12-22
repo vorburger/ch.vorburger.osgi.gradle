@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ch.vorburger.osgi.gradle.internal;
+package ch.vorburger.osgi.builder.internal;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import java.io.File;

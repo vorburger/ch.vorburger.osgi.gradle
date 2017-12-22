@@ -15,14 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ch.vorburger.osgi.gradle.internal.tests;
+package ch.vorburger.osgi.builder.tests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import ch.vorburger.osgi.gradle.internal.LoggingOutputStream;
-import ch.vorburger.osgi.gradle.internal.LoggingOutputStream.Level;
+import ch.vorburger.osgi.builder.internal.LoggingOutputStream;
+import ch.vorburger.osgi.builder.internal.LoggingOutputStream.Level;
 import java.util.LinkedList;
 import java.util.Queue;
 import org.junit.Test;

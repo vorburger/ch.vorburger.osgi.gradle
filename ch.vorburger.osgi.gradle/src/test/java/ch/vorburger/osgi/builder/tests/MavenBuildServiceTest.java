@@ -15,12 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ch.vorburger.osgi.gradle.internal.tests;
+package ch.vorburger.osgi.builder.tests;
 
 import java.io.File;
-
-import ch.vorburger.osgi.gradle.internal.BuildService;
-import ch.vorburger.osgi.maven.internal.MavenBuildService;
+import ch.vorburger.osgi.builder.internal.BuildService;
+import ch.vorburger.osgi.maven.builder.internal.MavenBuildService;
 import org.junit.Test;
 
 /**

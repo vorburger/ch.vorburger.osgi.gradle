@@ -24,8 +24,11 @@ import org.osgi.framework.Bundle;
 /**
  * Install a Bundle from source into OSGi framework (builds it).
  *
+ * @deprecated Use {@link ch.vorburger.osgi.builder.SourceInstallService} instead.
+ *
  * @author Michael Vorburger
  */
+@Deprecated
 public interface SourceInstallService extends AutoCloseable {
 
     /**

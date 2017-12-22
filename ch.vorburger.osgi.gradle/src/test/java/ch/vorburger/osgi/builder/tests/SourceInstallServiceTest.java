@@ -15,10 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ch.vorburger.osgi.gradle.internal.tests;
+package ch.vorburger.osgi.builder.tests;
 
-import ch.vorburger.osgi.gradle.SourceInstallService;
-import ch.vorburger.osgi.gradle.internal.SourceInstallServiceImpl;
+import ch.vorburger.osgi.builder.internal.SourceInstallServiceImpl;
+import ch.vorburger.osgi.builder.SourceInstallService;
 import java.io.File;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
