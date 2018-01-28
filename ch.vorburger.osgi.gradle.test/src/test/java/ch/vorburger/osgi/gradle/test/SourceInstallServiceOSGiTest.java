@@ -83,7 +83,9 @@ public class SourceInstallServiceOSGiTest implements AutoCloseable {
                 mavenBundle("com.google.guava", "guava", "17.0"),
                 wrappedBundle(maven("org.awaitility", "awaitility", "2.0.0")),
                 bundle("file:../org.gradle.tooling.osgi/build/libs/org.gradle.tooling.osgi-3.3.jar"),
-                wrappedBundle(maven("org.apache.maven.shared", "maven-invoker", "3.0.0")),
+                // DO NOT use wrappedBundle(maven("org.apache.maven.shared", "maven-invoker", "3.0.0")),
+                // because it makes deployment easier if the ch.vorburger.osgi.gradle bundle just
+                // embeds the maven-invoker and thus works without requiring wrap.
                 bundle("file:../ch.vorburger.osgi.gradle/build/libs/ch.vorburger.osgi.gradle-1.0.0-SNAPSHOT.jar"),
                 bundle("file:../ch.vorburger.osgi.gradle.test.bundle.api/build/libs/ch.vorburger.osgi.gradle.test.bundle.api-1.0.0-SNAPSHOT.jar"),
                 junitBundles());
