@@ -8,4 +8,5 @@ Export-Package: \
 Private-Package: \
     org.apache.maven.shared.invoker,\
     org.codehaus.plexus.util.*,\
-    org.codehaus.plexus.component.annotations
+    org.codehaus.plexus.component.annotations,\
+    ch.vorburger.fswatch
