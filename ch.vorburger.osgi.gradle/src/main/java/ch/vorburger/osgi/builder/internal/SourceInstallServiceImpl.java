@@ -61,8 +61,14 @@ public class SourceInstallServiceImpl implements SourceInstallService, ch.vorbur
                 Bundle bundle = bundleContext.getBundle(location);
                 if (bundle == null) {
                     bundle = bundleContext.installBundle(location, inputStream);
+                    bundle.start();
                 } else {
                     bundle.update(inputStream);
+                    // We (possibly "re")-start here, because it's possible that
+                    // an initial (or previous) start() failed due to some bug in the bundle
+                    // and that could have meanwhile be fixed, but OSGi won't re-try starting
+                    // a bundle an update if we don't tell it to...
+                    bundle.start();
                 }
                 installFuture.set(bundle);
             } catch (BundleException | IOException e) {
