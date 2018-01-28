@@ -31,11 +31,26 @@ public interface SourceInstallService extends AutoCloseable {
     /**
      * Installs an OSGi bundle from a source code project directory.
      *
+     * This method will attempt to automatically find the Bundle JAR output built
+     * using some heuristics (looking for *.jar in build/libs/ or target/ but
+     * skipping -all.jar; see BuildServiceListenerAdapter).
+     *
      * The bundle will NOT be started by this method, yet.
      *
-     * @param projectDirectory location of a Gradle buildable project
+     * @param projectDirectory location of a Gradle or Maven buildable project
      * @return a Future of the installed Bundle
      */
     ListenableFuture<Bundle> installSourceBundle(File projectDirectory);
+
+    /**
+     * Installs an OSGi bundle from a source code project directory.
+     *
+     * The bundle will NOT be started by this method, yet.
+     *
+     * @param projectDirectory location of a Gradle or Maven buildable project
+     * @param relativePathToBuiltBundle path relative to projectDirectory where Bundle JAR was built
+     * @return a Future of the installed Bundle
+     */
+    // TODO ListenableFuture<Bundle> installSourceBundle(File projectDirectory, File relativePathToBuiltBundle);
 
 }

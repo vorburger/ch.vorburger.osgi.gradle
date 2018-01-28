@@ -19,6 +19,8 @@ package ch.vorburger.osgi.builder.internal;
 
 import ch.vorburger.osgi.builder.gradle.internal.GradleBuildService;
 import ch.vorburger.osgi.builder.maven.internal.MavenBuildService;
+import ch.vorburger.fswatch.DirectoryWatcher;
+import ch.vorburger.fswatch.FileWatcherBuilder;
 import ch.vorburger.osgi.builder.SourceInstallService;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
@@ -48,21 +50,25 @@ public class SourceInstallServiceImpl implements SourceInstallService, ch.vorbur
     private final BuildService gradleBuildService = new GradleBuildService();
     private final BuildService mavenBuildService = new MavenBuildService();
 
+    private DirectoryWatcher bundleFileWatcher;
+
     public SourceInstallServiceImpl(BundleContext bundleContext) {
         this.bundleContext = bundleContext;
     }
 
     @Override
-    public ListenableFuture<Bundle> installSourceBundle(File projectDirectory) {
+    public ListenableFuture<Bundle> installSourceBundle(File projectDirectoryOrBundleJAR) {
         SettableFuture<Bundle> installFuture = SettableFuture.create();
         BuildServiceSingleFileOutputListener listener = singleProducedFile -> {
             try (InputStream inputStream = new FileInputStream(singleProducedFile)) {
-                String location = "source:" + projectDirectory.toURI().toString();
+                String location = getBundleLocation(projectDirectoryOrBundleJAR);
                 Bundle bundle = bundleContext.getBundle(location);
                 if (bundle == null) {
+                    LOG.info("Installing Bundle from {}", location);
                     bundle = bundleContext.installBundle(location, inputStream);
                     bundle.start();
                 } else {
+                    LOG.info("Updating Bundle from {}", location);
                     bundle.update(inputStream);
                     // We (possibly "re")-start here, because it's possible that
                     // an initial (or previous) start() failed due to some bug in the bundle
@@ -72,16 +78,54 @@ public class SourceInstallServiceImpl implements SourceInstallService, ch.vorbur
                 }
                 installFuture.set(bundle);
             } catch (BundleException | IOException e) {
-                LOG.error("Problem reading/installing bundle JAR built from source: {}", singleProducedFile, e);
+                LOG.error("Problem reading/installing bundle JAR: {}", singleProducedFile, e);
                 installFuture.setException(e);
             }
         };
 
         ListenableFuture<Void> buildFuture;
-        if (new File(projectDirectory, "pom.xml").exists()) {
-            buildFuture = mavenBuildService.buildContinously(projectDirectory, "install", listener);
+        if (new File(projectDirectoryOrBundleJAR, "pom.xml").exists()) {
+            LOG.info("Found a POM in directory, will continously build with Maven: {}", projectDirectoryOrBundleJAR);
+            buildFuture = mavenBuildService.buildContinously(projectDirectoryOrBundleJAR, "install", listener);
+        } else if (projectDirectoryOrBundleJAR.isDirectory()) {
+            LOG.info("Found directory (but no POM), will continously build with Gradle: {}", projectDirectoryOrBundleJAR);
+            buildFuture = gradleBuildService.buildContinously(projectDirectoryOrBundleJAR, "build", listener);
+        } else if (projectDirectoryOrBundleJAR.isFile() && projectDirectoryOrBundleJAR.getName().endsWith(".jar")) {
+            LOG.info("Found JAR, will install and update on update: {}", projectDirectoryOrBundleJAR);
+            // The JAR is already ready now, and can be started by caller:
+            try {
+                // NB: The default quietPeriod of 100ms is often not enough while Gradle updates the JAR and leads to ZipException, so 500ms:
+                bundleFileWatcher = new FileWatcherBuilder().path(projectDirectoryOrBundleJAR).quietPeriodInMS(500).listener((path, changeKind) -> {
+                    switch (changeKind) {
+                    case MODIFIED:
+                        // NB: FileWatcherBuilder invoked the listener once on start, and then on subsequent changes
+                        listener.buildSucceeded(projectDirectoryOrBundleJAR);
+                        break;
+
+                    case DELETED:
+                        String location = getBundleLocation(projectDirectoryOrBundleJAR);
+                        LOG.info("Uninstalling Bundle from {}", location);
+                        bundleContext.getBundle(location).uninstall();
+                        break;
+
+                    default:
+                        LOG.error("Unsupported file watcher change kind, ignored: {}", changeKind);
+                        break;
+                    }
+
+                    System.out.println(changeKind.name() + " " + path.toString());
+                }).build();
+                buildFuture = Futures.immediateFuture(null);
+            } catch (IOException e) {
+                buildFuture = Futures.immediateFailedFuture(e);
+            }
+            // But we make sure than upon changes it gets reloaded:
+            // TODO!!!!
         } else {
-            buildFuture = gradleBuildService.buildContinously(projectDirectory, "build", listener);
+            buildFuture = Futures.immediateFailedFuture(
+                    new IllegalArgumentException("Neither a directory (with or w.o. pom.xml) nor a JAR, "
+                            + "how I am supposed to (build and) install this as an OSGi bundle: "
+                            + projectDirectoryOrBundleJAR));
         }
 
         Futures.addCallback(buildFuture, new FutureCallback<Void>() {
@@ -100,11 +144,22 @@ public class SourceInstallServiceImpl implements SourceInstallService, ch.vorbur
         return installFuture;
     }
 
+    private String getBundleLocation(File projectDirectoryOrBundleJAR) {
+        String location = projectDirectoryOrBundleJAR.toURI().toString();
+        if (projectDirectoryOrBundleJAR.isDirectory()) {
+            location = "source:" + location;
+        }
+        return location;
+    }
+
     @Override
     // TODO @Deactivate
     public void close() throws Exception {
         gradleBuildService.close();
         mavenBuildService.close();
+        if (bundleFileWatcher != null) {
+            bundleFileWatcher.close();
+        }
     }
 
 }

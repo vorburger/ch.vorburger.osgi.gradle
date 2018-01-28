@@ -7,6 +7,7 @@ dependencies {
   compile 'org.osgi:org.osgi.core:6.0.0'
 
   compile 'org.apache.maven.shared:maven-invoker:3.0.0'
+  compile 'ch.vorburger:fswatch:1.0.0'
   // TODO compile 'org.osgi:org.osgi.service.component.annotations:1.3.0'
 
   // We need to force latest slf4j-api here so that we can use SubstituteLogger in LoggingOutputStreamTest
