@@ -4,3 +4,8 @@ Bundle-Activator: \
 Export-Package: \
     ch.vorburger.osgi.builder,\
     ch.vorburger.osgi.gradle
+
+Private-Package: \
+    org.apache.maven.shared.invoker,\
+    org.codehaus.plexus.util.*,\
+    org.codehaus.plexus.component.annotations
