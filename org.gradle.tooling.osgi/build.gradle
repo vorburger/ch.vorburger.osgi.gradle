@@ -1,5 +1,10 @@
-
-def toolingApiVersion = gradle.gradleVersion
+// Fix version, do not use gradle.gradleVersion,
+// as that means this build is dependant on the gradle version it runs under,
+// which has caused us confusion when someone ran it with the ./gradlew wrapper
+// and someone else with a non-Wrapper locally (sdkman) installed gradle of another version.
+// When this version is updated, then the SourceInstallServiceOSGiTest needs adjustment too.
+//
+def toolingApiVersion = "3.3" 
 
 version = "${toolingApiVersion}"
 
