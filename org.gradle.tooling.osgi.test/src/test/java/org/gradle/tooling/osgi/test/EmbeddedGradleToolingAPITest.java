@@ -39,7 +39,7 @@ public class EmbeddedGradleToolingAPITest {
     public Option[] config() {
         return options(
                 systemProperty("pax.exam.osgi.unresolved.fail").value("true"),
-                bundle("file:../org.gradle.tooling.osgi/build/libs/org.gradle.tooling.osgi-3.3.jar"),
+                bundle("file:../org.gradle.tooling.osgi/build/libs/org.gradle.tooling.osgi-4.5.jar"),
                 junitBundles());
     }
 

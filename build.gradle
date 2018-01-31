@@ -37,5 +37,7 @@ subprojects {
     // NOT NEEDED (and prevents download of source+JavaDoc JARs): mavenLocal()
     jcenter() // maven { url "http://repo.maven.apache.org/maven2" }
     maven { url "http://repo.spongepowered.org/maven" }
+    // This is required for the gradle-tooling-api (surprisingly only on Gradle 4.5 but not 3.3)
+    maven { url "https://repo.gradle.org/gradle/libs-releases/" }
   }
 }
