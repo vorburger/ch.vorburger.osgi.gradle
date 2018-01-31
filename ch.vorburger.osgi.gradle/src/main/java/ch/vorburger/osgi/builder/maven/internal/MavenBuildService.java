@@ -18,17 +18,10 @@
 package ch.vorburger.osgi.builder.maven.internal;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.WatchEvent;
-import java.nio.file.WatchKey;
-import java.nio.file.WatchService;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
+
+import ch.vorburger.fswatch.DirectoryWatcher;
+import ch.vorburger.fswatch.DirectoryWatcherBuilder;
 import ch.vorburger.osgi.builder.internal.BuildService;
 import ch.vorburger.osgi.builder.internal.BuildServiceListener;
 import ch.vorburger.osgi.builder.internal.ExecutorServiceProvider;
@@ -42,9 +35,7 @@ import org.apache.maven.shared.invoker.MavenInvocationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
-import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
-import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
+import static ch.vorburger.fswatch.DirectoryWatcher.ChangeKind.MODIFIED;
 
 /**
  * Implementation of BuildService for Maven.
@@ -54,18 +45,13 @@ public class MavenBuildService implements BuildService {
     private static final Logger LOG = LoggerFactory.getLogger(MavenBuildService.class);
 
     private final ListeningExecutorService executorService;
-    private WatchService watcher;
+    private DirectoryWatcher watcher;
 
     public MavenBuildService() {
         this(ExecutorServiceProvider.newCachedThreadPool(LOG, "MavenBuildService"));
     }
 
     public MavenBuildService(ListeningExecutorService executorService) {
-        try {
-            this.watcher = FileSystems.getDefault().newWatchService();
-        } catch (IOException ex) {
-            throw new RuntimeException("could not create watch service", ex);
-        }
         this.executorService = executorService;
     }
 
@@ -73,40 +59,11 @@ public class MavenBuildService implements BuildService {
         return executorService.submit(() -> {
             build(projectDirectory, tasks, listener);
             if (continuous) {
-                Path path = projectDirectory.toPath();
-                Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
-                    @Override
-                    public FileVisitResult preVisitDirectory(Path fileVisitor, BasicFileAttributes attrs) throws IOException {
-                        if ("target".equals(fileVisitor.getFileName().toString())) {
-                            return FileVisitResult.SKIP_SUBTREE;
-                        }
-                        fileVisitor.register(watcher, ENTRY_CREATE, ENTRY_MODIFY);
-                        return FileVisitResult.CONTINUE;
-                    }
-                });
-
-                while (true) {
-                    WatchKey key;
-                    try {
-                        key = watcher.take();
-                    } catch (InterruptedException x) {
-                        return null;
-                    }
-
-                    for (WatchEvent<?> event: key.pollEvents()) {
-                        WatchEvent.Kind<?> kind = event.kind();
-                        if (kind == OVERFLOW) {
-                            continue;
-                        }
-
+                watcher = new DirectoryWatcherBuilder().path(projectDirectory).quietPeriodInMS(10000).listener((path, changeKind) -> {
+                    if (changeKind == MODIFIED) {
                         build(projectDirectory, tasks, listener);
                     }
-
-                    boolean valid = key.reset();
-                    if (!valid) {
-                        break;
-                    }
-                }
+                }).build();
             }
 
             return null;
@@ -172,6 +129,7 @@ public class MavenBuildService implements BuildService {
     @Override
     public void close() throws Exception {
         executorService.shutdownNow();
+        watcher.close();
     }
 
 }
