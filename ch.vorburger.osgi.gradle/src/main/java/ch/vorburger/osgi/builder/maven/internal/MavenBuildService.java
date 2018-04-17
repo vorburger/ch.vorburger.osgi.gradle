@@ -129,7 +129,9 @@ public class MavenBuildService implements BuildService {
     @Override
     public void close() throws Exception {
         executorService.shutdownNow();
-        watcher.close();
+        if (watcher != null) {
+           watcher.close();
+        }
     }
 
 }
