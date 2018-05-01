@@ -59,11 +59,13 @@ public class MavenBuildService implements BuildService {
         return executorService.submit(() -> {
             build(projectDirectory, tasks, listener);
             if (continuous) {
-                watcher = new DirectoryWatcherBuilder().path(projectDirectory).quietPeriodInMS(10000).listener((path, changeKind) -> {
-                    if (changeKind == MODIFIED) {
-                        build(projectDirectory, tasks, listener);
-                    }
-                }).build();
+                watcher = new DirectoryWatcherBuilder().path(projectDirectory).quietPeriodInMS(10000)
+                            .fileFilter(pathName -> !pathName.getName().equals("target"))
+                            .listener((path, changeKind) -> {
+                                if (changeKind == MODIFIED) {
+                                    build(projectDirectory, tasks, listener);
+                                }
+                            }).build();
             }
 
             return null;
