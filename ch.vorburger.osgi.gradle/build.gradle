@@ -3,7 +3,7 @@ dependencies {
   // NO compile project(":org.gradle.tooling.osgi")
   compile "org.gradle:gradle-tooling-api:${gradle.gradleVersion}"
 
-  compile 'com.google.guava:guava:17.0'
+  compile 'com.google.guava:guava:23.0'
   compile 'org.osgi:org.osgi.core:6.0.0'
 
   compile 'org.apache.maven.shared:maven-invoker:3.0.1'
