@@ -13,6 +13,6 @@ dependencies {
   // We need to force latest slf4j-api here so that we can use SubstituteLogger in LoggingOutputStreamTest
   compile 'org.slf4j:slf4j-api:1.7.25'
   testCompile 'junit:junit:4.12'
-  testCompile 'org.awaitility:awaitility:3.1.2'
+  testCompile 'org.awaitility:awaitility:3.1.6'
   testRuntime 'org.slf4j:slf4j-simple:1.7.25'
 }

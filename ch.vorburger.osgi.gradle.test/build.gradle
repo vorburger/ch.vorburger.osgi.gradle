@@ -15,5 +15,5 @@ dependencies {
   testCompile project(":ch.vorburger.osgi.gradle")
   testCompile project(":ch.vorburger.osgi.gradle.test.bundle.api")
 
-  testCompile 'org.awaitility:awaitility:3.1.2'
+  testCompile 'org.awaitility:awaitility:3.1.6'
 }
