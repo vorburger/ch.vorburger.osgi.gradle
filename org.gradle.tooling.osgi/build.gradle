@@ -4,7 +4,7 @@
 // and someone else with a non-Wrapper locally (sdkman) installed gradle of another version.
 // When this version is updated, then the SourceInstallServiceOSGiTest and EmbeddedGradleToolingAPITest needs adjustment too.
 //
-def toolingApiVersion = "4.10.2"
+def toolingApiVersion = "5.2.1"
 
 version = "${toolingApiVersion}"
 
